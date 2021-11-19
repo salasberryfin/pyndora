@@ -11,13 +11,14 @@ from pyndora.cachestore import memory_cache as memcache
 
 def create_session(env):
     print(f"Environment configuration is: {env}")
-    pyndora_session = session.Session(
+    print(f"Host url: {env['host_url']}")
+    sdk_session = session.Session(
         host_url=env["host_url"],
         cache_provider=env["cache_provider"],
         cache_path=env["cache_path"],
     )
 
-    return pyndora_session
+    return sdk_session
 
 def create_memcache_provider():
     cache = memcache.memory_cache_provider
