@@ -1,3 +1,5 @@
+from pyndora.utils.crypto import wallet
+
 class LightWalletKeypair:
     """
     A `light` version of the WalletKeypar, containing only address and publickey
@@ -28,12 +30,15 @@ class WalletKeypair:
         self.private_str = private_str
 
 
-# # Example
-# def get_private_key(key_pair):
-#     """
-#     :param  key_pair:XfrKeyPair
-#     """
-#     ledger = get_ledger()
+def get_mnemonic(length, lang="english"):
+    """
+    :param length:int number of words
+    :param lang:str
+    :return str
+    """
+    ledger_mnemonic = wallet.generate_mnemonic_custom(length, lang)
+
+    return ledger_mnemonic
 
 def restore_from_mnemonic(mnemonic:[], password:str):
     """
@@ -50,9 +55,9 @@ def restore_from_mnemonic(mnemonic:[], password:str):
 
     return {
         "key_store": encrypted,
-        public_key,
-        address,
-        keypair,
+        "public_key": public_key,
+        "addres": address,
+        "keypair": keypair,
         "private_str": keypair_str,
     }
 
@@ -73,9 +78,9 @@ def create_keypair(password: str):
 
         return {
             "key_store": encrypted,
-            public_key,
-            address,
-            keypair,
+            "public_key": public_key,
+            "addres": address,
+            "keypair": keypair,
             "private_str": keypair_str,
         }
     except:

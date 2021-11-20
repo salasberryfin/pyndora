@@ -25,6 +25,7 @@ def write_cache(filename, data):
 
 # Memory Cache Provider
 memory_cache_provider = CacheProvider(
+    entry_name = "test",
     read = read_cache,
     write = write_cache,
 )
