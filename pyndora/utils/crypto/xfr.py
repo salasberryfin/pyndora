@@ -1,6 +1,7 @@
 import nacl.utils
 from nacl.public import PrivateKey
 
+
 class XfrPublicKey:
 
     def __init__(self):
@@ -45,4 +46,3 @@ class XfrKeyPair:
 
     def deserialize(self):
         pass
-

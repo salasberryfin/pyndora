@@ -2,7 +2,8 @@ from pyndora.utils.crypto import wallet
 
 class LightWalletKeypair:
     """
-    A `light` version of the WalletKeypar, containing only address and publickey
+    A `light` version of the WalletKeypar,
+    containing only address and publickey
     """
 
     def __init__(self, address: str, public_key: str):
@@ -12,7 +13,7 @@ class LightWalletKeypair:
         """
         self.address = address
         self.public_key = public_key
-    
+
 
 class WalletKeypair:
     """
@@ -40,13 +41,14 @@ def get_mnemonic(length, lang="english"):
 
     return ledger_mnemonic
 
-def restore_from_mnemonic(mnemonic:[], password:str):
+
+def restore_from_mnemonic(mnemonic: [], password: str):
     """
     :param  mnemonic:[]str
     :param  password:str
     """
-    ledger = get_ledger()
-    keypair = ledge.restore_keypar_from_mnemonic_default(mnemonic.join(" "))
+    keypair = wallet.restore_keypair_from_mnemonic_default(
+        mnemonic.ToStr())
     keypair_str = get_private_key_str(keypair)
     encrypted = ledger.encryption_pbkdf2_aes256gcm(keypair_str, password)
 
