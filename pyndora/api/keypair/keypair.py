@@ -1,6 +1,8 @@
 from pyndora.utils.crypto import wallet
+from pyndora.services.ledger import web_ledger
 
-class LightWalletKeypair:
+
+class LightWalletKeypar:
     """
     A `light` version of the WalletKeypar,
     containing only address and publickey
@@ -15,7 +17,7 @@ class LightWalletKeypair:
         self.public_key = public_key
 
 
-class WalletKeypair:
+class WalletKeypar:
     """
     A `full` version of the WalletKeypar, containing only address and publickey
     """
@@ -35,11 +37,11 @@ def get_mnemonic(length, lang="english"):
     """
     :param length:int number of words
     :param lang:str
-    :return str
+    :return mnemonic:str
     """
-    ledger_mnemonic = wallet.generate_mnemonic_custom(length, lang)
+    mnemonic = wallet.generate_mnemonic_custom(length, lang)
 
-    return ledger_mnemonic
+    return mnemonic
 
 
 def restore_from_mnemonic(mnemonic: [], password: str):
@@ -86,5 +88,23 @@ def create_keypair(password: str):
             "private_str": keypair_str,
         }
     except:
-        print("Could not create a WalletKeypair")
+        print("Could not create a WalletKeypar")
 
+
+def restore_from_keypair(priv_str: str, passwor: str) -> WalletKeypar:
+    """
+    Create instance of WalletKeypar using given private key and password
+
+    Used to restore a wallet key pair
+
+    The Keypair contains:
+    - address
+    - public key
+    - key store
+
+    :param  priv_str:str    private key
+    :param  password:str    password used to generate encrypted Keystore
+    :return wallet_info:WalletKeypar
+    """
+    keypair = web_ledger.create_keypair_from_secret(priv_str)
+    pass

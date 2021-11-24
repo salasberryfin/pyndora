@@ -2,47 +2,37 @@ import nacl.utils
 from nacl.public import PrivateKey
 
 
-class XfrPublicKey:
-
-    def __init__(self):
-        pass
-
-    def clone(self):
-        pass
-
-    def copy(self):
-        pass
-
-    def debug(self):
-        pass
-
-    def default(self):
-        pass
-
-
-class XfrSecretKey:
-
-    def __init__(self):
-        pass
-
-    def debug(self):
-        pass
-
-
 class XfrKeyPair:
+    """
+    XfrKeyPair {
+        pub_key: pynacl.PublicKey object
+    }
+    """
+
+    @property
+    def pub_key(self):
+        return bytes(self._pub_key).hex()
+
+    def __init__(self):
+        self._pub_key = None
 
     def generate(self):
-        self.sk = PrivateKey.generate()
-        self.pk = self.sk.public_key
+        """
+        Create new key pair
+        """
+        self.priv_key = PrivateKey.generate()
+        self._pub_key = self.priv_key.public_key
 
-    def clone(self):
+    def from_priv_key(self, secret):
+        """
+        Create key pair from private key
+        """
+        self.priv_key = secret
+        self._pub_key = secret.public_key
+
+    def destroy_into_raw(self):
         pass
 
-    def debug(self):
+    def free(self):
         pass
 
-    def serialize(self):
-        pass
-
-    def deserialize(self):
-        pass

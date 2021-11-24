@@ -1,6 +1,8 @@
-from pyndora.cachestore.factory import Factory
-from pyndora.cachestore.cache import CacheItem
-from pyndora.cachestore import memory_cache as memcache
+from pyndora.cachestore.cache import (
+    CacheItem,
+    CacheFactory,
+    memory_cache_provider,
+)
 
 default_env = {
     "host_url": 'https://dev-evm.dev.findora.org',
@@ -8,7 +10,7 @@ default_env = {
     "ledger_port": '8668',
     "submission_port": '8669',
     "explorer_api_port": '26657',
-    "cache_provider": memcache.memory_cache_provider,
+    "cache_provider": memory_cache_provider,
     "cache_path": './cache',
 }
 
@@ -46,7 +48,7 @@ class Session:
         cache_entries = {
             "utxo_data": "utxo_data_cache",
         }
-        Factory.write(
+        CacheFactory.write(
             f"{cache_entries.utxo_data}_{wallet_addr}",
             cache_data_to_save,
             self.environment.cache_provider,
