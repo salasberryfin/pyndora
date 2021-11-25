@@ -3,6 +3,7 @@ import json
 
 from pyndora.session import Session
 
+
 class Network:
 
     @property

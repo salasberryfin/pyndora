@@ -1,4 +1,4 @@
-from pyndora.utils.crypto import XfrKeyPair
+from pyndora.utils.crypto.xfr import XfrKeyPair
 
 
 def fra_get_asset_code() -> str:

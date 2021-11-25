@@ -1,9 +1,11 @@
 import binascii
+from enum import Enum
 from ctypes import c_uint32
 # from mnemonic import Mnemonic
 from bip_utils import (
     Bip39MnemonicGenerator, Bip39WordsNum, Bip39Languages, Bip39SeedGenerator,
     Bip44, Bip44Coins,
+    SegwitBech32Encoder, SegwitBech32Decoder
 )
 from pyndora.utils.crypto.xfr import XfrKeyPair
 
@@ -21,6 +23,11 @@ SET_LENGTH = {
 DERIVATION = {
     "bip32": ""
 }
+
+
+class Hrp(Enum):
+    Mainnet = "mn",
+    Tesnet = "tn"
 
 
 class BipPath:
@@ -119,3 +126,12 @@ def restore_keypair_from_mnemonic_default(phrase):
                                   bip44)
 
     return xfr_key_pair
+
+
+# Generate Segwit Bech32 address from public key
+def public_key_to_bech32(keypair: XfrKeyPair) -> str:
+    addr = SegwitBech32Encoder.Encode(Hrp.Tesnet.value,
+                                      0,
+                                      keypair.pub_key_raw)
+
+    return addr

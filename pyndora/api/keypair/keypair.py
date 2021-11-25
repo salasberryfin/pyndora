@@ -1,4 +1,5 @@
 from pyndora.utils.crypto import wallet
+from pyndora.utils.crypto.xfr import XfrKeyPair
 from pyndora.services.ledger import web_ledger
 
 
@@ -33,6 +34,32 @@ class WalletKeypar:
         self.private_str = private_str
 
 
+def create_keypair(password: str):
+    """
+    :param  password:str user password that protects the key store object
+    """
+    keypair = XfrKeyPair()
+    keypair.generate()
+    public_key_str = keypair.pub_key_raw.hex()
+    private_key_str = keypair.priv_key_raw.hex()
+    address = wallet.public_key_to_bech32(keypair)
+
+    # TODO: get keypair_str -> encrypt and passed as key_store
+    # encrypted = ledger.encryption_pbkdf2_aes256gcm(keypair_str, password)
+    encrypted = "pbkdf2_aes256gcm encrypted value"
+
+    created = {
+        "key_store": encrypted,
+        "public_key": public_key_str,
+        "address": address,
+        "private_str": private_key_str,
+    }
+
+    print(f"Created keypair data: {created}")
+
+    return created
+
+
 def get_mnemonic(length, lang="english"):
     """
     :param length:int number of words
@@ -51,44 +78,25 @@ def restore_from_mnemonic(mnemonic: [], password: str):
     """
     keypair = wallet.restore_keypair_from_mnemonic_default(
         mnemonic.ToStr())
-    keypair_str = get_private_key_str(keypair)
-    encrypted = ledger.encryption_pbkdf2_aes256gcm(keypair_str, password)
+    public_key_str = keypair.pub_key_raw.hex()
+    private_key_str = keypair.priv_key_raw.hex()
+    address = wallet.public_key_to_bech32(keypair)
 
-    public_key = get_public_key_str(keypair)
-    address = get_address(keypair)
+    # TODO: get keypair_str -> encrypt and passed as key_store
+    # encrypted = ledger.encryption_pbkdf2_aes256gcm(keypair_str, password)
+    encrypted = "pbkdf2_aes256gcm encrypted value"
 
-    return {
+    restored = {
         "key_store": encrypted,
-        "public_key": public_key,
+        "public_key": public_key_str,
         "addres": address,
         "keypair": keypair,
-        "private_str": keypair_str,
+        "private_str": private_key_str,
     }
 
-def create_keypair(password: str):
-    """
-    :param  password:str user password that protects the key store object
-    """
-    ledger = get_ledger()
+    print(f"Restored keypair data: {restored}")
 
-    try:
-        keypair = ledger.new_keypair()
-        keypair_str = ledger.keypair_to_str(keypair)
-        encrypted = ledger.encryption_pbkdf2_aes256gcm(keypair_str, password)
-
-        private_str = get_private_key_str(keypair)
-        public_key = get_public_key_str(keypair)
-        address = get_address(keypair)
-
-        return {
-            "key_store": encrypted,
-            "public_key": public_key,
-            "addres": address,
-            "keypair": keypair,
-            "private_str": keypair_str,
-        }
-    except:
-        print("Could not create a WalletKeypar")
+    return restored
 
 
 def restore_from_keypair(priv_str: str, passwor: str) -> WalletKeypar:
@@ -108,3 +116,18 @@ def restore_from_keypair(priv_str: str, passwor: str) -> WalletKeypar:
     """
     keypair = web_ledger.create_keypair_from_secret(priv_str)
     pass
+
+
+def restore_from_private_key(private, password) -> XfrKeyPair:
+    """
+    """
+    # TODO: support password protected private keys
+    keypair = XfrKeyPair()
+    try:
+        keypair.from_priv_key(
+            private_bytes=private,
+        )
+    except:
+        raise("error when restoring from private key")
+
+    return keypair
