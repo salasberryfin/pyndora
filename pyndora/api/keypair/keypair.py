@@ -18,23 +18,42 @@ class LightWalletKeypar:
         self.public_key = public_key
 
 
-class WalletKeypar:
+class WalletKeypar(LightWalletKeypar):
     """
-    A `full` version of the WalletKeypar, containing only address and publickey
+    A `full` version of the WalletKeypar.
+    Adds private key to what's already in a LightWalletKeypar.
     """
 
-    def __init__(self, key_store, key_pair, private_str):
+    def __init__(self, address:str, public_key:str,
+                 key_store, key_pair: XfrKeyPair, private_str: str):
         """
         :param  key_store: encrypted key store
-        :param  key_pair: instance of XfrKeyPair
+        :param  key_pair:XfrKeyPair
         :param  private_str:str
+
+        -> To keep private keys secure, the key store is encrypted under 
+        a user-provided password.
+        
+        -> The key store contains an encrypted seed that deterministically 
+        generates new key pairs.
+        
+        Because key generation is deterministic, the key store only 
+        needs to encrypt one element of data, the seed!
+        
+        The seed is encrypted under a master key (PBKDF2 key) 
+        derived from the user-provided password. Because generating the master
+        key is expensive, KeyStore exposes a utility for deriving it.
+        
+        Applications can derive the master key once on load and cache it for
+        the duration of their lifetime.
         """
+        LightWalletKeypar.__init__(self, address, public_key)
         self.key_store = key_store
         self.key_pair = key_pair
         self.private_str = private_str
 
 
-def create_keypair(password: str):
+def create_keypair(password: str) -> WalletKeypar:
     """
     :param  password:str user password that protects the key store object
     """
@@ -48,16 +67,32 @@ def create_keypair(password: str):
     # encrypted = ledger.encryption_pbkdf2_aes256gcm(keypair_str, password)
     encrypted = "pbkdf2_aes256gcm encrypted value"
 
-    created = {
-        "key_store": encrypted,
-        "public_key": public_key_str,
-        "address": address,
-        "private_str": private_key_str,
-    }
+    new_wallet = WalletKeypar(
+        address=address,
+        public_key=public_key_str,
+        key_store=encrypted,
+        key_pair="TODO",
+        private_str=private_key_str,
+    )
 
-    print(f"Created keypair data: {created}")
+    print(f"Created keypair data: {new_wallet}")
 
-    return created
+    return new_wallet
+
+
+def create_ligth_keypair(address: str) -> LightWalletKeypar:
+    """
+    Convert address to public key and create light wallet from address/pub_key.
+    :param  address:str wallet bech32 address
+    :return light_wallet:LightWalletKeypar
+    """
+    # TODO
+    # implement Bech32 -> Public Key converter
+    # public_key = wallet.bech32_to_public_key(address)
+    light_wallet = LightWalletKeypar(
+        address=address,
+    )
+    return light_wallet
 
 
 def get_mnemonic(length, lang="english"):
@@ -71,9 +106,9 @@ def get_mnemonic(length, lang="english"):
     return mnemonic
 
 
-def restore_from_mnemonic(mnemonic: [], password: str):
+def restore_from_mnemonic(mnemonic: list, password: str) -> WalletKeypar:
     """
-    :param  mnemonic:[]str
+    :param  mnemonic:list of str
     :param  password:str
     """
     keypair = wallet.restore_keypair_from_mnemonic_default(
@@ -86,20 +121,20 @@ def restore_from_mnemonic(mnemonic: [], password: str):
     # encrypted = ledger.encryption_pbkdf2_aes256gcm(keypair_str, password)
     encrypted = "pbkdf2_aes256gcm encrypted value"
 
-    restored = {
-        "key_store": encrypted,
-        "public_key": public_key_str,
-        "addres": address,
-        "keypair": keypair,
-        "private_str": private_key_str,
-    }
+    new_wallet = WalletKeypar(
+        address=address,
+        public_key=public_key_str,
+        key_store=encrypted,
+        key_pair=keypair,
+        private_str=private_key_str,
+    )
 
-    print(f"Restored keypair data: {restored}")
+    print(f"Restored keypair data: {new_wallet}")
 
-    return restored
+    return new_wallet
 
 
-def restore_from_keypair(priv_str: str, passwor: str) -> WalletKeypar:
+def restore_from_private_key(priv_str: str, passwor: str) -> WalletKeypar:
     """
     Create instance of WalletKeypar using given private key and password
 
@@ -117,17 +152,13 @@ def restore_from_keypair(priv_str: str, passwor: str) -> WalletKeypar:
     keypair = web_ledger.create_keypair_from_secret(priv_str)
     pass
 
-
-def restore_from_private_key(private, password) -> XfrKeyPair:
+def restore_from_key_store(key_store, password:str) -> WalletKeypar:
     """
+    Decrypt key store, get keys and create new WalletKeypar
+    :param  key_store:      uint8array
+    :param  password:str    encrypting password
+    :return new_wallet:WalletKeypar
     """
-    # TODO: support password protected private keys
-    keypair = XfrKeyPair()
-    try:
-        keypair.from_priv_key(
-            private_bytes=private,
-        )
-    except:
-        raise("error when restoring from private key")
-
-    return keypair
+    # TODO: check uint8array
+    new_wallet = WalletKeypar()
+    pass
