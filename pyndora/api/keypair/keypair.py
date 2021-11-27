@@ -24,7 +24,7 @@ class WalletKeypar(LightWalletKeypar):
     Adds private key to what's already in a LightWalletKeypar.
     """
 
-    def __init__(self, address:str, public_key:str,
+    def __init__(self, address: str, public_key: str,
                  key_store, key_pair: XfrKeyPair, private_str: str):
         """
         :param  key_store: encrypted key store
@@ -152,7 +152,8 @@ def restore_from_private_key(priv_str: str, passwor: str) -> WalletKeypar:
     keypair = web_ledger.create_keypair_from_secret(priv_str)
     pass
 
-def restore_from_key_store(key_store, password:str) -> WalletKeypar:
+
+def restore_from_key_store(key_store, password: str) -> WalletKeypar:
     """
     Decrypt key store, get keys and create new WalletKeypar
     :param  key_store:      uint8array
@@ -161,4 +162,4 @@ def restore_from_key_store(key_store, password:str) -> WalletKeypar:
     """
     # TODO: check uint8array
     new_wallet = WalletKeypar()
-    pass
+    return new_wallet

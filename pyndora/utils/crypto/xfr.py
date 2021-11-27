@@ -1,3 +1,5 @@
+import base64
+
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import ed25519
 
@@ -20,6 +22,14 @@ class XfrKeyPair:
             encoding=serialization.Encoding.Raw,
             format=serialization.PublicFormat.Raw,
         )
+
+    @property
+    def pub_key_base64(self):
+        b64 = base64.b64encode(self._pub_key.public_bytes(
+            encoding=serialization.Encoding.Raw,
+            format=serialization.PublicFormat.Raw,
+        ))
+        return b64
 
     @property
     def priv_key(self):

@@ -26,8 +26,8 @@ DERIVATION = {
 
 
 class Hrp(Enum):
-    Mainnet = "mn",
-    Tesnet = "tn"
+    Mainnet = "framain",
+    Testnet = "fra"
 
 
 class BipPath:
@@ -130,7 +130,7 @@ def restore_keypair_from_mnemonic_default(phrase):
 
 # Generate Segwit Bech32 address from public key
 def public_key_to_bech32(keypair: XfrKeyPair) -> str:
-    addr = SegwitBech32Encoder.Encode(Hrp.Tesnet.value,
+    addr = SegwitBech32Encoder.Encode(Hrp.Testnet.value,
                                       0,
                                       keypair.pub_key_raw)
 

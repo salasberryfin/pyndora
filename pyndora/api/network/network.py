@@ -8,19 +8,19 @@ class Network:
 
     @property
     def query_route(self):
-        return f"{self.env.post_url}:{self.env.query_port}"
+        return f"{self.env['host_url']}:{self.env['query_port']}"
 
     @property
     def submit_route(self):
-        return f"{self.env.host_url}:{self.env.submission_port}"
+        return f"{self.env['host_url']}:{self.env['submission_port']}"
 
     @property
     def ledger_route(self):
-        return f"{self.env.host_url}:{self.env.ledger_port}"
+        return f"{self.env['host_url']}:{self.env['ledger_port']}"
 
     @property
     def explorer_route(self):
-        return f"{self.env.host_url}:{self.env.explorer_api_port}"
+        return f"{self.env['host_url']}:{self.env['explorer_api_port']}"
 
     def __init__(self, env):
         """
@@ -58,7 +58,7 @@ class Network:
                                 headers=config["headers"])
         # TODO: return
 
-    def get_owned_sids(self, address, config):
+    def get_owned_sids(self, address: str, config):
         """
         :param  address:str
         :param  config:{
@@ -67,6 +67,7 @@ class Network:
         }
         """
         url = f"{self.query_route}/get_owned_utxos/{address}"
+        print(f"Query URL: {url}")
         data_result = self.api_get(url, config)
 
         # TODO: check (response, error)

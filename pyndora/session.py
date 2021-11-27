@@ -1,7 +1,7 @@
 from pyndora.cachestore.cache import (
     CacheItem,
     CacheFactory,
-    memory_cache_provider,
+    CacheProvider,
 )
 
 default_env = {
@@ -10,7 +10,7 @@ default_env = {
     "ledger_port": '8668',
     "submission_port": '8669',
     "explorer_api_port": '26657',
-    "cache_provider": memory_cache_provider,
+    "cache_provider": CacheProvider(),
     "cache_path": './cache',
 }
 

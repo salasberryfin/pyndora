@@ -61,7 +61,5 @@ class CacheFactory(CacheProvider):
         return True
 
 
-# Memory Cache Provider
-memory_cache_provider = CacheProvider(
-    entry_name="test",
-)
+# # Memory Cache Provider
+# memory_cache_provider = CacheProvider()
