@@ -8,26 +8,26 @@ from pyndora.api.network import network
 from pyndora.session import Session
 
 
-def get_wei_balance(wallet_keypair: XfrKeyPair, asset_code: str) -> str:
+def get_wei_balance(wallet_keypair: XfrKeyPair, asset_code: str) -> int:
     """
-    Method description
+    Get wei balance from owend sids
 
     Parameters
-        walleT_keypair:XfrKeyPair   wallet key pair
+        wallet_keypair:XfrKeyPair   wallet key pair
         asset_code:str  asset code
 
     Return
-        wei_balance:str wallet balance in wei
+        wei_balance:int wallet balance in wei
     """
-    wei_balance = ""
     # TODO: for now, use default SDK environment configuration
-    net_connect = network.Network(Session({}).environment)
-    print(f"Network configuration environment: {net_connect}")
+    net = network.Network(Session({}).environment)
+    print(f"Network configuration environment: {net}")
+    wei_balance = net.get_owned_sids(wallet_keypair.public_key, {})
 
     return wei_balance
 
 
-def get_fra_balance(walleT_keypair: XfrKeyPair) -> str:
+def get_fra_balance(wallet_keypair: XfrKeyPair) -> str:
     """
     Method description
 
@@ -38,5 +38,5 @@ def get_fra_balance(walleT_keypair: XfrKeyPair) -> str:
         balance:str
     """
     asset_code = asset.get_fra_asset_code()
-    wei_balance = get_wei_balance(walleT_keypair, asset_code)
+    wei_balance = get_wei_balance(wallet_keypair, asset_code)
     # balance = convert_wei(wei_balance, 6).

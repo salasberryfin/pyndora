@@ -43,16 +43,6 @@ class BipPath:
         self.address = address
 
 
-def new_keypair():
-    """
-    :return     XfrKeyPair
-    """
-    xfr_key_pair = XfrKeyPair()
-    xfr_key_pair.generate()
-
-    return xfr_key_pair
-
-
 def generate_mnemonic_default():
     """
     Generate a mnemonic phrase with default values.

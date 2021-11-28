@@ -1,5 +1,9 @@
 from pyndora.utils.crypto import wallet
-from pyndora.utils.crypto.xfr import XfrKeyPair
+from pyndora.utils.crypto.xfr import (
+    XfrKeyPair,
+    to_base64,
+    from_base64,
+)
 from pyndora.services.ledger import web_ledger
 
 
@@ -12,7 +16,7 @@ class LightWalletKeypar:
     def __init__(self, address: str, public_key: str):
         """
         :param  addres:str FRA wallet address
-        :param  public_key:str FRA
+        :param  public_key:str base64 encoded bytes FRA pub key
         """
         self.address = address
         self.public_key = public_key
@@ -29,7 +33,7 @@ class WalletKeypar(LightWalletKeypar):
         """
         :param  key_store: encrypted key store
         :param  key_pair:XfrKeyPair
-        :param  private_str:str
+        :param  private_str:str base64 encoded bytes FRA priv key
 
         -> To keep private keys secure, the key store is encrypted under 
         a user-provided password.
@@ -55,12 +59,18 @@ class WalletKeypar(LightWalletKeypar):
 
 def create_keypair(password: str) -> WalletKeypar:
     """
-    :param  password:str user password that protects the key store object
+    Create new key pair wallet
+
+    Parameters
+        password:str    user password for protecting the key store object
+
+    Return
+        new_wallet:WalletKeypar     new wallet object
     """
     keypair = XfrKeyPair()
     keypair.generate()
-    public_key_str = keypair.pub_key_raw.hex()
-    private_key_str = keypair.priv_key_raw.hex()
+    public_key_b64 = to_base64(keypair.pub_key_raw)
+    private_key_b64 = to_base64(keypair.priv_key_raw)
     address = wallet.public_key_to_bech32(keypair)
 
     # TODO: get keypair_str -> encrypt and passed as key_store
@@ -69,10 +79,10 @@ def create_keypair(password: str) -> WalletKeypar:
 
     new_wallet = WalletKeypar(
         address=address,
-        public_key=public_key_str,
+        public_key=public_key_b64,
         key_store=encrypted,
         key_pair="TODO",
-        private_str=private_key_str,
+        private_str=private_key_b64,
     )
 
     print(f"Created keypair data: {new_wallet}")
@@ -114,7 +124,9 @@ def restore_from_mnemonic(mnemonic: list, password: str) -> WalletKeypar:
     keypair = wallet.restore_keypair_from_mnemonic_default(
         mnemonic.ToStr())
     public_key_str = keypair.pub_key_raw.hex()
+    public_key_b64 = to_base64(public_key_str)
     private_key_str = keypair.priv_key_raw.hex()
+    private_key_b64 = to_base64(private_key_str)
     address = wallet.public_key_to_bech32(keypair)
 
     # TODO: get keypair_str -> encrypt and passed as key_store
@@ -123,10 +135,10 @@ def restore_from_mnemonic(mnemonic: list, password: str) -> WalletKeypar:
 
     new_wallet = WalletKeypar(
         address=address,
-        public_key=public_key_str,
+        public_key=public_key_b64,
         key_store=encrypted,
         key_pair=keypair,
-        private_str=private_key_str,
+        private_str=private_key_b64,
     )
 
     print(f"Restored keypair data: {new_wallet}")

@@ -44,33 +44,20 @@ class Network:
                                  headers=config["headers"])
         # TODO: return
 
-    def api_get(self, url, config):
-        """
-        :param  url:str
-        :param  config:{
-            headers,
-            params
-        }
-        """
-        # TODO: check params and headers
-        response = requests.get(url,
-                                params=config["params"],
-                                headers=config["headers"])
-        # TODO: return
-
-    def get_owned_sids(self, address: str, config):
+    def get_owned_sids(self, address: str, config: dict):
         """
         :param  address:str
-        :param  config:{
+        :param  config:dict{
             headers,
             params
         }
         """
         url = f"{self.query_route}/get_owned_utxos/{address}"
         print(f"Query URL: {url}")
-        data_result = self.api_get(url, config)
-
-        # TODO: check (response, error)
+        # response = requests.get(url,
+        #                         params=config["params"],
+        #                         headers=config["headers"])
+        # print(response)
 
     def get_related_sids(self, address, config):
         """
@@ -81,7 +68,10 @@ class Network:
         }
         """
         url = f"{self.query_route}/get_related_txns/{address}"
-        data_result = self.api_get(url, config)
+        response = requests.get(url,
+                                params=config["params"],
+                                headers=config["headers"])
+        print(response)
 
         # TODO: check (response, error)
 
@@ -94,9 +84,10 @@ class Network:
         }
         """
         url = f"{self.ledger_route}/utxo_sid/{utxo_sid}"
-        data_result = self.api_get(url, config)
-
-        # TODO: check (response, error)
+        response = requests.get(url,
+                                params=config["params"],
+                                headers=config["headers"])
+        print(response)
 
     def get_owner_memo(self, utxo_sid, config):
         """
@@ -107,6 +98,7 @@ class Network:
         }
         """
         url = f"{self.ledger_route}/get_owner_memo/{utxo_sid}"
-        data_result = self.api_get(url, config)
-
-        # TODO: check (response, error)
+        response = requests.get(url,
+                                params=config["params"],
+                                headers=config["headers"])
+        print(response)

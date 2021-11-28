@@ -66,3 +66,39 @@ class XfrKeyPair:
 
     def free(self):
         pass
+
+
+def to_base64(key: bytes) -> bytes:
+    """
+    Encode key string to base64
+
+    Parameters
+        key:bytes     raw bytes to encode
+
+    Return
+        encoded:bytes encoded bytes object
+    """
+    try:
+        encoded = base64.urlsafe_b64encode(key)
+    except TypeError as error:
+        raise TypeError(f"Invalid value for encoding: {error}.")
+
+    return encoded
+
+
+def from_base64(key: bytes) -> bytes:
+    """
+    Decode key string to base64
+
+    Parameters
+        key:bytes     base64 bytes to decode
+
+    Return
+        decoded:bytes decoded bytes object
+    """
+    try:
+        decoded = base64.urlsafe_b64decode(key)
+    except TypeError as error:
+        raise TypeError(f"Invalid value for encoding: {error}.")
+
+    return decoded
