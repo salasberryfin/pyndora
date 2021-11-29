@@ -118,22 +118,27 @@ def get_mnemonic(length, lang="english"):
 
 def restore_from_mnemonic(mnemonic: list, password: str) -> WalletKeypar:
     """
-    :param  mnemonic:list of str
-    :param  password:str
+    Restore keypair from mnemonic phrase.
+
+    Args
+        mnemonic:str    mnemonic phrase
+        password:str    user password for key pair encryption
+
+    Return
+        WalletKeypar    fra wallet object
     """
+
     keypair = wallet.restore_keypair_from_mnemonic_default(
-        mnemonic.ToStr())
-    public_key_str = keypair.pub_key_raw.hex()
-    public_key_b64 = to_base64(public_key_str)
-    private_key_str = keypair.priv_key_raw.hex()
-    private_key_b64 = to_base64(private_key_str)
+        mnemonic)
+    public_key_b64 = to_base64(keypair.pub_key_raw)
+    private_key_b64 = to_base64(keypair.priv_key_raw)
     address = wallet.public_key_to_bech32(keypair)
 
     # TODO: get keypair_str -> encrypt and passed as key_store
     # encrypted = ledger.encryption_pbkdf2_aes256gcm(keypair_str, password)
     encrypted = "pbkdf2_aes256gcm encrypted value"
 
-    new_wallet = WalletKeypar(
+    restored_wallet = WalletKeypar(
         address=address,
         public_key=public_key_b64,
         key_store=encrypted,
@@ -141,9 +146,7 @@ def restore_from_mnemonic(mnemonic: list, password: str) -> WalletKeypar:
         private_str=private_key_b64,
     )
 
-    print(f"Restored keypair data: {new_wallet}")
-
-    return new_wallet
+    return restored_wallet
 
 
 def restore_from_private_key(priv_str: str, passwor: str) -> WalletKeypar:

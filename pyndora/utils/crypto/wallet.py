@@ -1,7 +1,5 @@
-import binascii
 from enum import Enum
 from ctypes import c_uint32
-# from mnemonic import Mnemonic
 from bip_utils import (
     Bip39MnemonicGenerator, Bip39WordsNum, Bip39Languages, Bip39SeedGenerator,
     Bip44, Bip44Coins,
@@ -56,7 +54,18 @@ def generate_mnemonic_default():
     return phrase
 
 
-def generate_mnemonic_custom(length, lang="english"):
+def generate_mnemonic_custom(length: int, lang="english") -> str:
+    """
+    Generate custom mnemonic for given length, language
+
+    Parameters
+        length:int  number of words of the mnemonic: check valid lengths
+        lang:str    language of the mnemonic words -> defaults to english
+
+    Return
+        phrase:str  mnemonic phrase
+    """
+
     if length not in SET_LENGTH.keys():
         raise ValueError(
             f"Length {length} is not in supported {SET_LENGTH.keys()}."
@@ -71,10 +80,19 @@ def generate_mnemonic_custom(length, lang="english"):
     return phrase
 
 
-def restore_keypair_from_mnemonic(phrase, lang, path, bip):
+def restore_keypair_from_mnemonic(phrase, lang, path, bip) -> XfrKeyPair:
     """
+    Restore XfrKeyPair from mnemonic phrase.
+
+    Args:
+        phrase:str  mnemonic phrase
+        lang:str    mnemonic phrase language
+        path:str    bip44 path
+        bip:str     bip format
+
+    Return
+        keypair:XfrKeyPair  fra key pair object
     """
-    # TODO
 
     mnemo_list = [x for x in phrase.split(" ")]
     if len(mnemo_list) not in SET_LENGTH.keys():
@@ -87,41 +105,67 @@ def restore_keypair_from_mnemonic(phrase, lang, path, bip):
         )
     seed_bytes = Bip39SeedGenerator(phrase).Generate()
     bip44_mst_ctx = Bip44.FromSeed(seed_bytes, Bip44Coins.FINDORA)
-    # Test prints
-    print(f"Master key (bytes): {bip44_mst_ctx.PrivateKey().Raw().ToHex()}")
-    print(f"Master key (extended): {bip44_mst_ctx.PrivateKey().ToExtended()}")
-    print(f"Master key (WIF): {bip44_mst_ctx.PrivateKey().ToWif()}")
-    extended_secret_key = bip44_mst_ctx.PrivateKey().ToExtended()
+    # # Test prints
+    # print(f"Master key (bytes): {bip44_mst_ctx.PrivateKey().Raw().ToHex()}")
+    # print(f"Master key (extended): {bip44_mst_ctx.PrivateKey().ToExtended()}")
+    # print(f"Master key (WIF): {bip44_mst_ctx.PrivateKey().ToWif()}")
+    # extended_secret_key = bip44_mst_ctx.PrivateKey().ToExtended()
     # bip44_acc_ctx = bip44_mst_ctx.Purpose().Coin().Account(path["account"])
+    keypair = XfrKeyPair()
+    keypair.from_priv_key(bip44_mst_ctx.PrivateKey().Raw())
 
-    return bip44_mst_ctx
+    return keypair
 
 
-# Restore the XfrKeyPair from a mnemonic with a default bip44-path,
-# that is "m/44'/917'/0'/0/0" ("m/44'/coin'/account'/change/address").
-def restore_keypair_from_mnemonic_default(phrase):
+def restore_keypair_from_mnemonic_default(phrase) -> XfrKeyPair:
     """
+    Restore the XfrKeyPair from a mnemonic with a default bip44-path,
+    that is "m/44'/917'/0'/0/0" ("m/44'/coin'/account'/change/address").
     """
-    # TODO
     fra = c_uint32(917)
-    xfr_key_pair = XfrKeyPair()
     bip_path = BipPath(fra,
                        c_uint32(0),
                        c_uint32(0),
                        c_uint32(0))
     bip44 = ""
-    restore_keypair_from_mnemonic(phrase,
-                                  "english",
-                                  bip_path,
-                                  bip44)
+    restored = restore_keypair_from_mnemonic(phrase,
+                                             "english",
+                                             bip_path,
+                                             bip44)
 
-    return xfr_key_pair
+    return restored
 
 
-# Generate Segwit Bech32 address from public key
 def public_key_to_bech32(keypair: XfrKeyPair) -> str:
+    """
+    Generate Segwit Bech32 from public key.
+
+    Parameters
+        keypair:XfrKeyPair  wallet key pair
+
+    Return
+        addr:str    SegWithBech32 address
+    """
+
     addr = SegwitBech32Encoder.Encode(Hrp.Testnet.value,
                                       0,
                                       keypair.pub_key_raw)
 
     return addr
+
+
+def bech32_to_public_key(address: str) -> str:
+    """
+    Generate public key from Segwit Bech32.
+
+    Parameters
+        address:str    SegWithBech32 address
+
+    Return
+        pub_key:str    wallet key pair public key
+    """
+
+    pub_key = SegwitBech32Decoder.Decode(Hrp.Testnet.value,
+                                         address)
+
+    return pub_key

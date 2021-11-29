@@ -1,8 +1,6 @@
 import requests
 import json
 
-from pyndora.session import Session
-
 
 class Network:
 
@@ -46,34 +44,38 @@ class Network:
 
     def get_owned_sids(self, address: str, config: dict):
         """
-        :param  address:str
+        :param  address:str     utf-8 encoded
         :param  config:dict{
             headers,
             params
         }
         """
+        address = address.decode("utf-8")
         url = f"{self.query_route}/get_owned_utxos/{address}"
         print(f"Query URL: {url}")
-        # response = requests.get(url,
-        #                         params=config["params"],
-        #                         headers=config["headers"])
-        # print(response)
+        response = requests.get(url,
+                                params=config.get("params", None),
+                                headers=config.get("headers", None))
+        if response.status_code != 200:
+            print(f"Getting owned sids from {response.url} failed")
+
+        return response.text
 
     def get_related_sids(self, address, config):
         """
-        :param  address:str
+        :param  address:str     utf-8 encoded
         :param  config:{
             headers,
             params
         }
         """
+        address = address.decode("utf-8")
         url = f"{self.query_route}/get_related_txns/{address}"
         response = requests.get(url,
                                 params=config["params"],
                                 headers=config["headers"])
-        print(response)
 
-        # TODO: check (response, error)
+        return response
 
     def get_utxo(self, utxo_sid, config):
         """

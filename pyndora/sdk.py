@@ -15,13 +15,24 @@ default_env = {
 }
 
 
-class Session:
+class Sdk:
     """
-    Session holds the SDK configuration.
+    Holds the SDK session configuration.
 
     """
+    __instance = None
 
-    def __init__(self, sdk_env):
+    def __new__(cls):
+        """
+        Singleton implementation.
+        """
+        if cls.__instance is None:
+            print("Initializing Sdk environment.")
+            cls.__instance = super(Sdk, cls).__new__(cls)
+
+        return cls.__instance
+
+    def init(self, sdk_env):
         """
         Initialize SDK environment with default values if
         not specified.

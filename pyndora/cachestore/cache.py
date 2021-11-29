@@ -7,12 +7,11 @@ class MemoryCache():
 
 class CacheItem:
     """
+    Cache Item
     """
 
-    def __init__(self, value: str):
-        self.value = {
-            "key": value,
-        }
+    def __init__(self, item: dict):
+        self.value = item
 
 
 class CacheProvider():
