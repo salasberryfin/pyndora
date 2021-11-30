@@ -87,9 +87,12 @@ class Network:
         """
         url = f"{self.ledger_route}/utxo_sid/{utxo_sid}"
         response = requests.get(url,
-                                params=config["params"],
-                                headers=config["headers"])
-        print(response)
+                                params=config.get("params", None),
+                                headers=config.get("headers", None))
+        if response.status_code != 200:
+            print(f"Getting utxo sids from {response.url} failed")
+
+        return response.text
 
     def get_owner_memo(self, utxo_sid, config):
         """

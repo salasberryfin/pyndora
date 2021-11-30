@@ -1,9 +1,14 @@
 from enum import Enum
-from ctypes import c_uint32
 from bip_utils import (
-    Bip39MnemonicGenerator, Bip39WordsNum, Bip39Languages, Bip39SeedGenerator,
-    Bip44, Bip44Coins,
-    SegwitBech32Encoder, SegwitBech32Decoder
+    Bip39MnemonicGenerator,
+    Bip39WordsNum,
+    Bip39Languages,
+    Bip39SeedGenerator,
+    Bip39MnemonicValidator,
+    Bip32Ed25519Slip,
+    Bech32Encoder,
+    Bech32Decoder,
+    Bech32FormatError,
 )
 from pyndora.utils.crypto.xfr import XfrKeyPair
 
@@ -33,8 +38,8 @@ class BipPath:
     Bip44/Bip49 path
     """
 
-    def __init__(self, coin: c_uint32, account: c_uint32,
-                 change: c_uint32, address: c_uint32):
+    def __init__(self, coin: int, account: int,
+                 change: int, address: int):
         self.coin = coin
         self.account = account
         self.change = change
@@ -46,10 +51,15 @@ def generate_mnemonic_default():
     Generate a mnemonic phrase with default values.
     English, 12 words.
 
-    :return mnemonic
+    Parameters
+        No input parameters
+
+    Return
+        phrase:str  mnemonic phrase
     """
-    phrase = Bip39MnemonicGenerator(Bip39Languages.ENGLISH).FromWordsNumber(
-        Bip39WordsNum.WORDS_NUM_12)
+    lang = Bip39Languages.ENGLISH
+    length = Bip39WordsNum.WORDS_NUM_12
+    phrase = Bip39MnemonicGenerator(lang).FromWordsNumber(length)
 
     return phrase
 
@@ -87,12 +97,15 @@ def restore_keypair_from_mnemonic(phrase, lang, path, bip) -> XfrKeyPair:
     Args:
         phrase:str  mnemonic phrase
         lang:str    mnemonic phrase language
-        path:str    bip44 path
+        path:Bip44  Bip44 object
         bip:str     bip format
 
     Return
         keypair:XfrKeyPair  fra key pair object
     """
+
+    if not Bip39MnemonicValidator().IsValid(phrase):
+        raise ValueError(f"{phrase} is not a valid mnemonic.")
 
     mnemo_list = [x for x in phrase.split(" ")]
     if len(mnemo_list) not in SET_LENGTH.keys():
@@ -103,30 +116,35 @@ def restore_keypair_from_mnemonic(phrase, lang, path, bip) -> XfrKeyPair:
         raise ValueError(
             f"Language {lang} is not supported."
         )
-    seed_bytes = Bip39SeedGenerator(phrase).Generate()
-    bip44_mst_ctx = Bip44.FromSeed(seed_bytes, Bip44Coins.FINDORA)
-    # # Test prints
-    # print(f"Master key (bytes): {bip44_mst_ctx.PrivateKey().Raw().ToHex()}")
-    # print(f"Master key (extended): {bip44_mst_ctx.PrivateKey().ToExtended()}")
-    # print(f"Master key (WIF): {bip44_mst_ctx.PrivateKey().ToWif()}")
-    # extended_secret_key = bip44_mst_ctx.PrivateKey().ToExtended()
-    # bip44_acc_ctx = bip44_mst_ctx.Purpose().Coin().Account(path["account"])
+
+    seed = Bip39SeedGenerator(phrase, SET_LANG[lang]).Generate()
+    bip_path = f"m/44'/{path.coin}'/{path.account}'/{path.change}'/{path.address}'"
+    bip32_ctx = Bip32Ed25519Slip.FromSeedAndPath(seed, bip_path)
+    private = bip32_ctx.PrivateKey().Raw().ToBytes()
+
     keypair = XfrKeyPair()
-    keypair.from_priv_key(bip44_mst_ctx.PrivateKey().Raw())
+    keypair.from_priv_key(private)
 
     return keypair
 
 
 def restore_keypair_from_mnemonic_default(phrase) -> XfrKeyPair:
     """
-    Restore the XfrKeyPair from a mnemonic with a default bip44-path,
+    Restore XfrKeyPair from a mnemonic with a default bip44-path,
     that is "m/44'/917'/0'/0/0" ("m/44'/coin'/account'/change/address").
+
+    Params
+        phrase:str  mnemonic phrase
+
+
+    Return
+        restored:XfrKeyPair     key pair
     """
-    fra = c_uint32(917)
+    fra = 917
     bip_path = BipPath(fra,
-                       c_uint32(0),
-                       c_uint32(0),
-                       c_uint32(0))
+                       0,
+                       0,
+                       0)
     bip44 = ""
     restored = restore_keypair_from_mnemonic(phrase,
                                              "english",
@@ -138,7 +156,7 @@ def restore_keypair_from_mnemonic_default(phrase) -> XfrKeyPair:
 
 def public_key_to_bech32(keypair: XfrKeyPair) -> str:
     """
-    Generate Segwit Bech32 from public key.
+    Generate Bech32 from public key.
 
     Parameters
         keypair:XfrKeyPair  wallet key pair
@@ -147,9 +165,11 @@ def public_key_to_bech32(keypair: XfrKeyPair) -> str:
         addr:str    SegWithBech32 address
     """
 
-    addr = SegwitBech32Encoder.Encode(Hrp.Testnet.value,
-                                      0,
-                                      keypair.pub_key_raw)
+    try:
+        addr = Bech32Encoder.Encode(Hrp.Testnet.value,
+                                    keypair.pub_key_raw)
+    except Bech32FormatError as err:
+        raise Bech32FormatError(f"Failed to generate bech32 address: {err}")
 
     return addr
 
@@ -165,7 +185,10 @@ def bech32_to_public_key(address: str) -> str:
         pub_key:str    wallet key pair public key
     """
 
-    pub_key = SegwitBech32Decoder.Decode(Hrp.Testnet.value,
-                                         address)
+    try:
+        pub_key = Bech32Decoder.Decode(Hrp.Testnet.value,
+                                       address)
+    except Bech32FormatError as err:
+        raise Bech32FormatError(f"Failed to decode bech32 address: {err}")
 
     return pub_key

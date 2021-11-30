@@ -23,7 +23,7 @@ class CacheProvider():
 
         return cache_data
 
-    def write(self, entry_name: str, data: CacheItem):
+    def write(self, data: CacheItem):
         """
         :param  entry_name:str    key id of CacheItem
         :param  data:CacheItem  new value for the CacheItem
@@ -31,31 +31,39 @@ class CacheProvider():
         :return bool    True after updating value
         """
 
-        MemoryCache.data().value[entry_name] = data
+        MemoryCache.data().value[self._entry_name] = data
 
         return True
 
 
-class CacheFactory(CacheProvider):
+class CacheFactory():
     """
-    Inherits from CacheProvider
     """
-
-    def __init__(self, entry_name: str, provider: CacheProvider):
-        self.entry_name = entry_name
-        self.provider = provider
 
     def read(self, entry_name: str, provider: CacheProvider) -> CacheItem:
-        return provider.read(entry_name)
+        """
+        Read given entry with provider.
 
-    def write(self, entry_name: str, data: CacheItem, provider: CacheProvider):
+        Parameters
+            entry_name:str          key id of CacheItem
+            provider:CacheProvider  cache provider object
+
+        Return
+            item:CacheItem      read cache item
+        """
+        # import pdb;pdb.set_trace()
+        item = provider.read(entry_name)
+
+        return item
+
+    def write(self, data: CacheItem, provider: CacheProvider):
         """
         :param  entry_name:str    key id of CacheItem
         :param  data:CacheItem  new value for the CacheItem
 
         :return bool    True after updating value
         """
-        provider.write(entry_name, data)
+        provider.write(self._entry_name, data)
 
         return True
 

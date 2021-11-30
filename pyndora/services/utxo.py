@@ -1,9 +1,11 @@
 from pyndora.api.keypair.keypair import WalletKeypar
+from pyndora.api.network.network import Network
+
 from pyndora.cachestore.cache import (
     CacheItem,
     CacheFactory,
 )
-from pyndora.api.network.network import Network
+from pyndora.cachestore.config import CacheEntries
 
 from pyndora.sdk import Sdk
 
@@ -42,17 +44,18 @@ def add_utxo(wallet_info: WalletKeypar, sids):
     cache_data_to_save = CacheItem({})
 
     # TODO: cache_entries.utxo_data
-    cache_entry_name = f"cache_entries.utxo_data_{wallet_info.address}"
+    cache_entry_name = f"{CacheEntries.UTXO_DATA.value}_{wallet_info.address}"
     full_path = f"{sdk_config.environment['cache_path']}/{cache_entry_name}.json"
-    # import pdb; pdb.set_trace()
     try:
-        utxo_data_cache = CacheFactory.read(
+        cache_factory = CacheFactory()
+        utxo_data_cache = cache_factory.read(
             entry_name=full_path,
-            provider=sdk_config.environment["provider"],
+            provider=sdk_config.environment["cache_provider"],
         )
     except:
         print("Error reading the cache.")
 
+    # import pdb; pdb.set_trace()
     # for sid in sids:
     #     item = get_utxo_item(sid, wallet_info, utxo_data_cache[f"sid_{sid}"])
 
