@@ -20,7 +20,7 @@ class CacheProvider(CacheItem):
             entry_name:str  dictionary key
 
         Return
-            cache_data:cache_item value
+            cache_data:CacheItem.data
         """
 
         cache_data = self.data.get(entry_name, None)
@@ -59,7 +59,7 @@ class CacheFactory:
             provider:CacheProvider
 
         Return
-            cache_data:cache_item value
+            cache_data:CacheItem.data
         """
 
         cache_data = provider.read(entry_name)
