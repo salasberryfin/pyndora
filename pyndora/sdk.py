@@ -1,5 +1,4 @@
 from pyndora.cachestore.cache import (
-    CacheItem,
     CacheFactory,
     CacheProvider,
 )
@@ -24,7 +23,8 @@ class Sdk:
 
     def __new__(cls):
         """
-        Singleton implementation.
+        Only one instance of the Sdk class is allowed per session.
+        This instance can later be modified.
         """
         if cls.__instance is None:
             print("Initializing Sdk environment.")
@@ -45,13 +45,13 @@ class Sdk:
         """
         self.environment = default_env
 
-    def set_utxo_data(self, wallet_addr: str, utxo_cache: CacheItem):
+    def set_utxo_data(self, wallet_addr: str, utxo_cache: dict):
         """
         :param  wallet_addr:str address of the Findora wallet
         :param  utxo_cache:[]CacheItem list of CacheItems
         """
 
-        cache_data_to_save = CacheItem()
+        cache_data_to_save = dict()
         for item in utxo_cache:
             cache_data_to_save[f"sid_{item.sid}"] = item
 

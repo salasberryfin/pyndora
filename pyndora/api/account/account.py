@@ -1,5 +1,3 @@
-import json
-
 from pyndora.utils.crypto.xfr import XfrKeyPair
 
 from pyndora.api.asset import asset
@@ -40,7 +38,7 @@ def get_wei_balance(wallet_keypair: WalletKeypar, asset_code: str) -> int:
         wei_balance:int wallet balance in wei
     """
     net = network.Network(Sdk().environment)
-    sids = json.loads(net.get_owned_sids(wallet_keypair.public_key, {}))
+    sids = net.get_owned_sids(wallet_keypair.public_key, {})
     if not sids:
         print(f"No FRA balance retrieved for {wallet_keypair.public_key}")
         wei_balance = 0

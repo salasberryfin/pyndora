@@ -44,22 +44,28 @@ class Network:
 
     def get_owned_sids(self, address: str, config: dict):
         """
-        :param  address:str     utf-8 encoded
-        :param  config:dict{
-            headers,
-            params
-        }
+        Get owned SIDs for given address.
+
+        Parameters
+            address:str     fra address
+            config:{
+                headers,
+                params
+
+            }
+
+        Return
+            response:json   json formatted HTTP response
         """
         address = address.decode("utf-8")
         url = f"{self.query_route}/get_owned_utxos/{address}"
-        print(f"Query URL: {url}")
         response = requests.get(url,
                                 params=config.get("params", None),
                                 headers=config.get("headers", None))
         if response.status_code != 200:
             print(f"Getting owned sids from {response.url} failed")
 
-        return response.text
+        return json.loads(response.text)
 
     def get_related_sids(self, address, config):
         """
@@ -75,15 +81,22 @@ class Network:
                                 params=config["params"],
                                 headers=config["headers"])
 
-        return response
+        return json.loads(response.text)
 
     def get_utxo(self, utxo_sid, config):
         """
-        :param  utxo_sid:int
-        :param  config:{
-            headers,
-            params
-        }
+        Fetch an asset record from the ledger server.
+
+        Parameters
+            utxo_sid:int
+            config:{
+                headers,
+                params
+
+            }
+
+        Return
+            response:json   json formatted HTTP response
         """
         url = f"{self.ledger_route}/utxo_sid/{utxo_sid}"
         response = requests.get(url,
@@ -92,18 +105,26 @@ class Network:
         if response.status_code != 200:
             print(f"Getting utxo sids from {response.url} failed")
 
-        return response.text
+        return json.loads(response.text)
 
     def get_owner_memo(self, utxo_sid, config):
         """
-        :param  utxo_sid:int
-        :param  config:{
-            headers,
-            params
-        }
+        Get owner memo for given SID
+
+        Parameters
+            utxo_sid:int
+            config:{
+                headers,
+                params
+
+            }
+
+        Return
+            response:json   json formatted HTTP response
         """
-        url = f"{self.ledger_route}/get_owner_memo/{utxo_sid}"
+        url = f"{self.query_route}/get_owner_memo/{utxo_sid}"
         response = requests.get(url,
-                                params=config["params"],
-                                headers=config["headers"])
-        print(response)
+                                params=config.get("params", None),
+                                headers=config.get("headers", None))
+
+        return json.loads(response.text)

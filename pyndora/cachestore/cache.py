@@ -1,72 +1,85 @@
-class MemoryCache():
-
-    @classmethod
-    def data(self):
-        return CacheItem()
-
-
 class CacheItem:
     """
-    Cache Item
+    Basic cache object: key/value dictionary.
+    """
+    data = dict()
+
+
+class CacheProvider(CacheItem):
+    """
+    Provider for Cache interaction: read/write
+    Each CacheProvider object inherits from CacheItem
+    for key:value cache storage.
     """
 
-    def __init__(self, item: dict):
-        self.value = item
+    def read(self, entry_name: str):
+        """
+        Read cache item identified by dictionary key.
 
+        Params
+            entry_name:str  dictionary key
 
-class CacheProvider():
-    """
-    """
+        Return
+            cache_data:cache_item value
+        """
 
-    def read(self, entry_name: str) -> CacheItem:
-        cache_data = MemoryCache.data().value[entry_name]
+        cache_data = self.data.get(entry_name, None)
 
         return cache_data
 
-    def write(self, data: CacheItem):
+    def write(self, entry_name: str, data) -> bool:
         """
-        :param  entry_name:str    key id of CacheItem
-        :param  data:CacheItem  new value for the CacheItem
+        Write cache item to the specified dictionary key.
 
-        :return bool    True after updating value
-        """
-
-        MemoryCache.data().value[self._entry_name] = data
-
-        return True
-
-
-class CacheFactory():
-    """
-    """
-
-    def read(self, entry_name: str, provider: CacheProvider) -> CacheItem:
-        """
-        Read given entry with provider.
-
-        Parameters
-            entry_name:str          key id of CacheItem
-            provider:CacheProvider  cache provider object
+        Params
+            entry_name:str  dictionary key
+            data:any        item value
 
         Return
-            item:CacheItem      read cache item
+            bool    True if data was added
         """
-        # import pdb;pdb.set_trace()
-        item = provider.read(entry_name)
 
-        return item
-
-    def write(self, data: CacheItem, provider: CacheProvider):
-        """
-        :param  entry_name:str    key id of CacheItem
-        :param  data:CacheItem  new value for the CacheItem
-
-        :return bool    True after updating value
-        """
-        provider.write(self._entry_name, data)
+        self.data[entry_name] = data
 
         return True
 
 
-# # Memory Cache Provider
-# memory_cache_provider = CacheProvider()
+class CacheFactory:
+    """
+    Wrapper for a cache interaction with the given CacheProvider.
+    """
+
+    def read(self, entry_name: str,
+             provider: CacheProvider) -> dict:
+        """
+        Read cache item identified by dictionary key with given provider.
+
+        Params
+            entry_name:str          dictionary key
+            provider:CacheProvider
+
+        Return
+            cache_data:cache_item value
+        """
+
+        cache_data = provider.read(entry_name)
+
+        return cache_data
+
+    def write(self, entry_name: str, data: dict,
+              provider: CacheProvider) -> bool:
+        """
+        Write cache item to the specified dictionary key with given provider.
+
+        Params
+            entry_name:str  dictionary key
+            data:any        item value
+            provider:CacheProvider
+
+        Return
+            bool    True if data was added
+        """
+
+        provider.write(entry_name, data)
+
+        return True
