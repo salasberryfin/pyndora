@@ -1,37 +1,37 @@
-ETH_TO_WEI = 1e18
+TO_WEI = 1e6
 
 
-def eth_to_wei(value: float, precision: int = 6) -> str:
+def to_wei(value: float, precision: int = 6) -> str:
     """
-    Converts ETH to WEI.
+    Converts to WEI.
 
     Parameters
-        value:int   eth value to convert
+        value:int       value to convert
         precision:int   precision digits
 
     Return
         wei:str     wei conversion
     """
 
-    wei_scientific = value * ETH_TO_WEI
+    wei_scientific = value * TO_WEI
     wei = format(wei_scientific, f".{precision}f")
 
     return wei
 
 
-def wei_to_eth(value: float, precision: int = 6) -> str:
+def from_wei(value: float, precision: int = 6) -> str:
     """
-    Converts WEI to ETH.
+    Converts WEI.
 
     Parameters
-        value:int   eth value to convert
+        value:int       value to convert
         precision:int   precision digits
 
     Return
         eth:str     eth conversion
     """
 
-    eth_scientific = value / ETH_TO_WEI
+    eth_scientific = value / TO_WEI
     eth = format(eth_scientific, f".{precision}f")
 
     return eth

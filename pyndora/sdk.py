@@ -1,7 +1,10 @@
 from pyndora.cachestore.cache import (
+    CacheItem,
     CacheFactory,
     CacheProvider,
 )
+
+from pyndora.cachestore.config import CacheEntries
 
 default_env = {
     "host_url": 'https://dev-evm.dev.findora.org',
@@ -32,10 +35,13 @@ class Sdk:
 
         return cls.__instance
 
-    def init(self, sdk_env):
+    def init(self, sdk_env: dict):
         """
         Initialize SDK environment with default values if
         not specified.
+
+        Parameters
+            sdk_env:dict    SDK configuration
         """
         self.environment = {**default_env, **sdk_env}
 
@@ -47,20 +53,18 @@ class Sdk:
 
     def set_utxo_data(self, wallet_addr: str, utxo_cache: dict):
         """
-        :param  wallet_addr:str address of the Findora wallet
-        :param  utxo_cache:[]CacheItem list of CacheItems
+
+        Parameters
+            wallet_addr:str  address of the Findora wallet
+            utxo_cache:[]CacheItem list of CacheItems
         """
 
-        cache_data_to_save = dict()
+        cache_data_to_save = CacheItem()
         for item in utxo_cache:
             cache_data_to_save[f"sid_{item.sid}"] = item
 
-        # TODO: define cache_entries? /src/config/cache.ts
-        cache_entries = {
-            "utxo_data": "utxo_data_cache",
-        }
         CacheFactory.write(
-            f"{cache_entries.utxo_data}_{wallet_addr}",
+            f"{CacheEntries.UTXO_DATA.value}_{wallet_addr}",
             cache_data_to_save,
             self.environment.cache_provider,
         )

@@ -92,7 +92,6 @@ class Network:
             config:{
                 headers,
                 params
-
             }
 
         Return

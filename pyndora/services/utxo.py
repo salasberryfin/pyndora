@@ -15,6 +15,8 @@ def decrypt_utxo_item(sid: int, wallet_info: WalletKeypar,
                       utxo: dict, memo: dict):
     """
     Decrypt UTXO item.
+    ** I don't know what's happening behind in the web assembly implementation
+    so I'll just parse the data received from the network.
 
     Parameters
         Arg1:
@@ -26,7 +28,6 @@ def decrypt_utxo_item(sid: int, wallet_info: WalletKeypar,
     asset_record = ledger.ClientAssetRecord.from_json(utxo["utxo"])
 
     owner_memo = memo
-    # owner_memo = {}
 
     decrypted_asset = ledger.open_client_asset_record(
         asset_record,
@@ -50,9 +51,9 @@ def get_utxo_item(sid: int, wallet_info: WalletKeypar, cached_item: dict):
     Get UTXO item from network.
 
     Parameters
-        sid:int     sid id
+        sid:int                     sid id
         wallet_info:WalletKeypar    fra wallet object
-        cached_item:dict    cache item
+        cached_item:dict            cache item
 
     Return
         item:decrypted item
@@ -68,8 +69,6 @@ def get_utxo_item(sid: int, wallet_info: WalletKeypar, cached_item: dict):
     print(f"Fetching sid {sid}")
     utxo_data = net.get_utxo(sid, {})
     memo_data = net.get_owner_memo(sid, {})
-
-    # import pdb;pdb.set_trace()
 
     item = decrypt_utxo_item(sid, wallet_info, utxo_data, memo_data)
 
@@ -101,19 +100,15 @@ def add_utxo(wallet_info: WalletKeypar, sids: list):
     )
 
     if not utxo_data_cache:
+        utxo_data_cache = {}
         print(f"Cache data for '{full_path}' is empty.")
 
     for sid in sids:
-        # TODO: utxo_data_cache.get when no cache entries are found
-        # import pdb; pdb.set_trace()
-        # utxo_data_sid = utxo_data_cache.get(f"sid_{sid}", None)
-        # item = get_utxo_item(sid, wallet_info, utxo_data_sid)
-        item = get_utxo_item(sid, wallet_info, {})
+        utxo_data_sid = utxo_data_cache.get(f"sid_{sid}", None)
+        item = get_utxo_item(sid, wallet_info, utxo_data_sid)
         utxo_data.append(item)
         cache_to_save[f"sid_{item['sid']}"] = item
 
     cache.write(full_path, cache_to_save, sdk_provider)
-
-    # import pdb; pdb.set_trace()
 
     return utxo_data
