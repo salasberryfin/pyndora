@@ -118,7 +118,7 @@ def restore_keypair_from_mnemonic(phrase, lang, path, bip) -> XfrKeyPair:
         )
 
     seed = Bip39SeedGenerator(phrase, SET_LANG[lang]).Generate()
-    bip_path = f"m/44'/{path.coin}'/{path.account}'/{path.change}'/{path.address}'"
+    bip_path = f"m/44'/{path.coin}'/{path.account}'/{path.change}/{path.address}"
     bip32_ctx = Bip32Ed25519Slip.FromSeedAndPath(seed, bip_path)
     private = bip32_ctx.PrivateKey().Raw().ToBytes()
 
@@ -162,7 +162,7 @@ def public_key_to_bech32(keypair: XfrKeyPair) -> str:
         keypair:XfrKeyPair  wallet key pair
 
     Return
-        addr:str    SegWithBech32 address
+        addr:str    Bech32 address
     """
 
     try:
@@ -176,10 +176,10 @@ def public_key_to_bech32(keypair: XfrKeyPair) -> str:
 
 def bech32_to_public_key(address: str) -> str:
     """
-    Generate public key from Segwit Bech32.
+    Generate public key from Bech32.
 
     Parameters
-        address:str    SegWithBech32 address
+        address:str    Bech32 address
 
     Return
         pub_key:str    wallet key pair public key

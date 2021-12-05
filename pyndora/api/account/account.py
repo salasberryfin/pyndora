@@ -60,7 +60,7 @@ def get_wei_balance(wallet_keypair: WalletKeypar, asset_code: str) -> float:
     net = network.Network(Sdk().environment)
     sids = net.get_owned_sids(wallet_keypair.public_key, {})
     if not sids:
-        print(f"No FRA balance retrieved for {wallet_keypair.public_key}")
+        print(f"No FRA balance retrieved for {wallet_keypair.address}")
         wei_balance = 0
     else:
         wei_balance = get_asset_balance(wallet_keypair, asset_code, sids)

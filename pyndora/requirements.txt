@@ -1,6 +1,6 @@
 asn1crypto==1.4.0
 base58==2.1.1
-bip-utils==2.1.0
+git+https://github.com/salasberryfin/bip_utils.git
 certifi==2021.10.8
 cffi==1.15.0
 charset-normalizer==2.0.7

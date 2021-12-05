@@ -112,3 +112,17 @@ def add_utxo(wallet_info: WalletKeypar, sids: list):
     cache.write(full_path, cache_to_save, sdk_provider)
 
     return utxo_data
+
+
+def get_send_utxo():
+    """
+    """
+
+    pass
+
+
+def add_utxo_inputs():
+    """
+    """
+
+    pass

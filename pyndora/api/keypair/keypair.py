@@ -2,7 +2,6 @@ from pyndora.utils.crypto import wallet
 from pyndora.utils.crypto.xfr import (
     XfrKeyPair,
     to_base64,
-    from_base64,
 )
 from pyndora.services.ledger import web_ledger
 
@@ -178,3 +177,24 @@ def restore_from_key_store(key_store, password: str) -> WalletKeypar:
     # TODO: check uint8array
     new_wallet = WalletKeypar()
     return new_wallet
+
+
+def address_to_public_key(address) -> LightWalletKeypar:
+    """
+    Get base64 public key for given bech32 address.
+
+    Parameters
+        address:str
+
+    Return
+        light_wallet:LightWalletKeypar
+    """
+    public_key = wallet.bech32_to_public_key(address)
+    public_key_b64 = to_base64(public_key)
+
+    light_wallet = LightWalletKeypar(
+        address=address,
+        public_key=public_key_b64,
+    )
+
+    return light_wallet
