@@ -1,13 +1,10 @@
 from pyndora.api.keypair import WalletKeypar
 from pyndora.api import network
-
 from pyndora.cachestore.cache import (
     CacheFactory,
 )
 from pyndora.cachestore.config import CacheEntries
-
 from pyndora.services.ledger import web_ledger as ledger
-
 from pyndora.sdk import Sdk
 
 
@@ -114,15 +111,75 @@ def add_utxo(wallet_info: WalletKeypar, sids: list):
     return utxo_data
 
 
-def get_send_utxo():
+def get_send_utxo(asset_code: str, amount: float, utxo_data: list):
     """
+    Create list of utxo like objects for the send operation.
+
+    Parameters
+        asset_code:str
+        amount:float
+        utxo_data:list
+
+    Return
+        result:list     list of utxo data items
     """
 
-    pass
+    balance = amount
+
+    result = []
+    for item in utxo_data:
+        if item["body"]["asset_type"] == asset_code:
+            _amount = float(item["body"]["amount"])
+            if balance < float(0):
+                break
+            elif _amount >= balance:
+                result.append({
+                        "amount": balance,
+                        "origin_amount": _amount,
+                        "sid": item["sid"],
+                        "utxo": item["utxo"],
+                        "owner_memo": item.get("owner_memo", None),
+                        "memo_data": item.get("memo_data", None),
+                })
+            break
 
 
-def add_utxo_inputs():
+    return result
+
+
+def add_utxo_inputs(utxo_sids: list) -> list:
     """
+    Create list of inputs to be used for the transaction builder.
+
+    Parameters
+        utxo_sids:list
+
+    Return
+        result:list
     """
 
-    pass
+    input_amount = float(0)
+    input_parameters_list = []
+    for utxo in utxo_sids:
+        input_amount += float(utxo["origin_amount"])
+        # TODO: don't know how to generate a ClientAssetRecord object
+        asset_record = ledger.ClientAssetRecord.from_json(utxo["utxo"])
+        # TODO: don't know how to generate this TxoRef works
+        txo_ref = ledger.TxoRef.absolute()
+
+        params = {
+            "txo_ref": txo_ref,
+            "asset_record": asset_record,
+            "owner_memo": utxo.get("owner_memo", None),
+            "amount": utxo["amount"],
+            "memo_data": utxo.get("memo_data", None),
+            "sid": utxo["sid"],
+        }
+        input_parameters_list.append(params)
+
+    result = {
+        "input_parameters_list": input_parameters_list,
+        "input_amount": input_amount,
+    }
+
+    return result

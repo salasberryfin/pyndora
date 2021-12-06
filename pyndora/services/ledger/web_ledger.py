@@ -1,4 +1,5 @@
 class ClientAssetRecord:
+    # TODO
 
     def from_json(asset):
         """
@@ -20,10 +21,20 @@ class ClientAssetRecord:
 
 
 class OwnerMemo:
+    # TODO
 
     def from_json():
 
-        # TODO
+        pass
+
+
+class TxoRef:
+    # TODO
+
+    def absolute():
+        pass
+
+    def relative():
         pass
 
 

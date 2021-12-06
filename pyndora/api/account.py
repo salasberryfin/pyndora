@@ -5,9 +5,7 @@ from pyndora.api import (
 from pyndora.api.keypair import WalletKeypar
 
 from pyndora.services.utxo import add_utxo
-from pyndora.services.big_number import (
-    from_wei,
-)
+from pyndora.services import conversion
 
 from pyndora.sdk import Sdk
 
@@ -85,6 +83,6 @@ def get_balance(wallet_keypair: WalletKeypar, asset_code: str = None) -> float:
     if not asset_code:
         asset_code = asset.get_fra_asset_code()
     wei_balance = get_wei_balance(wallet_keypair, asset_code)
-    balance = from_wei(wei_balance, 6)
+    balance = conversion.from_wei(wei_balance, 6)
 
     return balance

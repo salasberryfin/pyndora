@@ -1,5 +1,6 @@
 from pyndora.sdk import Sdk
 from pyndora.api import network
+from pyndora.services import conversion
 
 
 def get_fra_asset_code() -> str:
@@ -33,11 +34,12 @@ def get_asset_details(asset_code: str):
     # TODO: add support for different assets
     net = network.Network(Sdk().environment)
     details = net.get_asset_token(asset_code)
+    # import pdb;pdb.set_trace()
 
     pass
 
 
-def get_minimal_fee():
+def get_minimal_fee() -> float:
     """
     Get minimal fee for transaction.
 
@@ -48,7 +50,13 @@ def get_minimal_fee():
         Return
     """
 
-    pass
+    # TODO: this is retrieved from js-wasm
+    # hardcode it for now
+
+    default_value = float("0.01")
+    fee = conversion.to_wei(default_value)
+
+    return fee
 
 
 def get_fra_public_key():
@@ -62,4 +70,8 @@ def get_fra_public_key():
         Return
     """
 
-    pass
+    # TODO: this is retrieved from js-wasm
+    # hardcode it for now
+    pub_key = ""
+
+    return pub_key

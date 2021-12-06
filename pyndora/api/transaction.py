@@ -2,7 +2,10 @@ from pyndora.api.keypair import (
     WalletKeypar,
     address_to_public_key,
 )
-from pyndora.services.big_number import to_wei
+from pyndora.services import (
+    conversion,
+    fee,
+)
 from pyndora.api import asset
 
 
@@ -24,7 +27,7 @@ def send_to_many(wallet_info: WalletKeypar, receivers: list,
     receivers_info = []
     for rec in receivers:
         to_pub_key = rec["receiver_wallet_info"].public_key.decode("utf-8")
-        utxo_numbers = to_wei(float(rec["amount"]))
+        utxo_numbers = conversion.to_wei(float(rec["amount"]))
         rec_info = {
             "to_public_key": to_pub_key,
             "utxo_numbers": utxo_numbers,
@@ -41,9 +44,14 @@ def send_to_many(wallet_info: WalletKeypar, receivers: list,
         }
         receivers_info.append(fee_rec_info)
 
-    # import pdb;pdb.set_trace()
-
     # TODO: transfer operation builder
+    tx_operation_builder = fee.build_transfer_operation(
+        wallet_info,
+        receivers_info,
+        asset_code,
+    )
+
+    # import pdb;pdb.set_trace()
 
     pass
 
@@ -54,10 +62,10 @@ def send_to_address(wallet_info: WalletKeypar, to_addr: str,
     Generate a transaction builder to send amount to given address.
 
     Parameters
-        wallet_info:
-        to_addr:
-        amount:
-        asset_code:
+        wallet_info:WalletKeypar    fra wallet object
+        to_addr:str                 destination fra address
+        amount:str                  amount to send
+        asset_code:str              asset to send: defaults to FRA if None
 
     Return
         transaction builder
