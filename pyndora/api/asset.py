@@ -1,5 +1,5 @@
 from pyndora.sdk import Sdk
-from pyndora.api.network import network
+from pyndora.api import network
 
 
 def get_fra_asset_code() -> str:

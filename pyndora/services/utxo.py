@@ -1,5 +1,5 @@
-from pyndora.api.keypair.keypair import WalletKeypar
-from pyndora.api.network.network import Network
+from pyndora.api.keypair import WalletKeypar
+from pyndora.api import network
 
 from pyndora.cachestore.cache import (
     CacheFactory,
@@ -64,7 +64,7 @@ def get_utxo_item(sid: int, wallet_info: WalletKeypar, cached_item: dict):
     if cached_item:
         return cached_item
 
-    net = Network(sdk_environment)
+    net = network.Network(sdk_environment)
 
     print(f"Fetching sid {sid}")
     utxo_data = net.get_utxo(sid, {})

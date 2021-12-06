@@ -1,7 +1,9 @@
-from pyndora.api.keypair.keypair import WalletKeypar
-from pyndora.api.keypair.keypair import address_to_public_key
+from pyndora.api.keypair import (
+    WalletKeypar,
+    address_to_public_key,
+)
 from pyndora.services.big_number import to_wei
-from pyndora.api.asset import asset
+from pyndora.api import asset
 
 
 def send_to_many(wallet_info: WalletKeypar, receivers: list,

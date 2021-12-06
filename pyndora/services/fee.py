@@ -1,6 +1,8 @@
-from pyndora.api.keypair.keypair import WalletKeypar
-from pyndora.api.network import network
-from pyndora.api.asset import asset
+from pyndora.api.keypair import WalletKeypar
+from pyndora.api import (
+    network,
+    asset,
+)
 from pyndora.services.utxo import (
     add_utxo,
     get_send_utxo,
@@ -10,7 +12,8 @@ from pyndora.services.utxo import (
 from pyndora.sdk import Sdk
 
 
-def get_transfer_operation():
+def get_transfer_operation(wallet_info: WalletKeypar, utxo_inputs,
+                           receivers_info: list, asset_code: str):
     """
     """
 
