@@ -7,11 +7,9 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-<!--
   <a href="https://github.com/salasberryfin/pyndora">
     <img src="images/findora.svg" alt="Logo" width="80" height="80">
   </a>
--->
 
 <h3 align="center">Pyndora</h3>
 
@@ -58,17 +56,17 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
-
-**WIP** Basic Python SDK for the Findora blockchain
+**[This is still a WIP]** Basic Python SDK for the Findora blockchain
+<br>
 This is still so far from a completely usable SDK but I think it's a good starting 
-point if the idea of a Python SDK for Findora is found to be useful. Some 
-of the complexities of the blockchain itself made it harder than expected to 
+point if the idea of a Python SDK for Findora is found to be useful.
+<br>
+Some of the complexities of the blockchain itself made it harder than expected to 
 progress on developing the basic functionalities of the SDK and, the fact that 
 some of the core crypto-related methods could not be reused from Python made it 
 considerably tougher for the time I've been able to spent on it so far.
-
-Still, I think it would be to continue building on top of this project if the team 
+<br>
+Still, I think it would be great to continue building on top of this project if the team 
 finds it interesting.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
@@ -154,4 +152,3 @@ Project Link: [https://github.com/salasberryfin/pyndora](https://github.com/sala
 [stars-url]: https://github.com/salasberryfin/pyndora/stargazers
 [issues-shield]: https://img.shields.io/github/issues/salasberryfin/pyndora.svg?style=for-the-badge
 [issues-url]: https://github.com/salasberryfin/pyndora/issues
-[product-screenshot]: images/findora.svg
