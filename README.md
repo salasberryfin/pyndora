@@ -1,23 +1,3 @@
-
-<div id="top"></div>
-<!--
-*** Thanks for checking out the Best-README-Template. If you have a suggestion
-*** that would make this better, please fork the repo and create a pull request
-*** or simply open an issue with the tag "enhancement".
-*** Don't forget to give the project a star!
-*** Thanks again! Now go create something AMAZING! :D
--->
-
-
-
-<!-- PROJECT SHIELDS -->
-<!--
-*** I'm using markdown "reference style" links for readability.
-*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
--->
 [![Contributors][contributors-shield]][contributors-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
@@ -29,7 +9,7 @@
 <div align="center">
 <!--
   <a href="https://github.com/salasberryfin/pyndora">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src="images/findora.svg" alt="Logo" width="80" height="80">
   </a>
 -->
 
@@ -65,12 +45,10 @@
       <a href="#getting-started">Getting Started</a>
       <ul>
         <li><a href="#dependencies">Dependencies</a></li>
-        <li><a href="#installation">Installation</a></li>
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
     <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
   </ol>
 </details>
@@ -82,7 +60,16 @@
 
 [![Product Name Screen Shot][product-screenshot]](https://example.com)
 
-Basic Python SDK for the Findora blockchain
+**WIP** Basic Python SDK for the Findora blockchain
+This is still so far from a completely usable SDK but I think it's a good starting 
+point if the idea of a Python SDK for Findora is found to be useful. Some 
+of the complexities of the blockchain itself made it harder than expected to 
+progress on developing the basic functionalities of the SDK and, the fact that 
+some of the core crypto-related methods could not be reused from Python made it 
+considerably tougher for the time I've been able to spent on it so far.
+
+Still, I think it would be to continue building on top of this project if the team 
+finds it interesting.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -94,28 +81,40 @@ Basic Python SDK for the Findora blockchain
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-
+This project is entirely based on Python.
 
 <!-- GETTING STARTED -->
 ## Getting Started
 
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
+You can create your own virtual environment, install the required dependencies 
+and test the implemented methods.
 
 ### Dependencies
 
-```
+* Clone the repository
+
+```bash
+git clone https://github.com/salasberryfin/pyndora
 ```
 
-### Installation
+* Inside the project folder
 
-
+```bash
+virtualenv -p python3 .venv
+source .venv/bin/activate
 ```
+
+* Install required dependencies
+
+```bash
+pip install -r requirements.txt
 ```
 
 <!-- USAGE EXAMPLES -->
 ## Usage
 
+`examples.py` contains a few use cases that have been totally or partially 
+implemented. Feel free to test them out/modify/break.
 
 
 <!-- CONTRIBUTING -->
@@ -134,21 +133,10 @@ Don't forget to give the project a star! Thanks again!
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-
-
-<!-- LICENSE -->
-## License
-
-Distributed under the MIT License. See `LICENSE.txt` for more information.
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
-
 <!-- CONTACT -->
 ## Contact
 
-Your Name - [@salasberryfin](https://twitter.com/salasberryfin) - email@email_client.com
+Your Name - [@salasberryfin](https://twitter.com/salasberryfin)
 
 Project Link: [https://github.com/salasberryfin/pyndora](https://github.com/salasberryfin/pyndora)
 
@@ -166,6 +154,4 @@ Project Link: [https://github.com/salasberryfin/pyndora](https://github.com/sala
 [stars-url]: https://github.com/salasberryfin/pyndora/stargazers
 [issues-shield]: https://img.shields.io/github/issues/salasberryfin/pyndora.svg?style=for-the-badge
 [issues-url]: https://github.com/salasberryfin/pyndora/issues
-[license-shield]: https://img.shields.io/github/license/salasberryfin/pyndora.svg?style=for-the-badge
-[license-url]: https://github.com/salasberryfin/pyndora/blob/master/LICENSE.txt
-[product-screenshot]: images/screenshot.png
+[product-screenshot]: images/findora.svg
