@@ -56,15 +56,20 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-**[This is still a WIP]** Basic Python SDK for the Findora blockchain
+**[This is still a WIP]**
+<br>
+**Basic Python SDK for the Findora blockchain**
+<br>
 <br>
 This is still so far from a completely usable SDK but I think it's a good starting 
 point if the idea of a Python SDK for Findora is found to be useful.
+<br>
 <br>
 Some of the complexities of the blockchain itself made it harder than expected to 
 progress on developing the basic functionalities of the SDK and, the fact that 
 some of the core crypto-related methods could not be reused from Python made it 
 considerably tougher for the time I've been able to spent on it so far.
+<br>
 <br>
 Still, I think it would be great to continue building on top of this project if the team 
 finds it interesting.
@@ -115,6 +120,7 @@ pip install -r requirements.txt
 implemented. Feel free to test them out/modify/break.
 <br>
 - First you can initialize your SDK session, as shown in [examples.py](examples.py) `create_session`
+<br>
 This SDK object holds the configuration for the current session, assuming 
 sensible defaults for those parameters that are not passed.
 ```python
@@ -133,8 +139,7 @@ You can later `reset` this session to the default values if needed.
 sdk.reset()
 ```
 <br>
-- Generate a new mnemonic and create wallet from it, as shown in  [examples.py](examples.py) 
-`create_fra_keypair_from_mnemonic`.
+- Generate a new mnemonic and create wallet from it, as shown in [examples.py](examples.py) `create_fra_keypair_from_mnemonic`.
 ```python
 from pyndora.api import (
     keypair,
@@ -156,8 +161,8 @@ print(f"""Wallet:\n
       private_str: {wallet_info.private_str.decode("utf-8")}
       """)
 ```
-*Encrypted store of `key_store` and `key_pair` not implemented.* -> Nice TODO 
-if someone if willing to collaborate on understanding how it's done in Findora.
+*Encrypted store of 'key_store' and 'key_pair' not implemented.* -> Nice TODO 
+if someone is willing to collaborate on understanding how it's done in Findora.
 <br>
 - Get FRA balance for given wallet - recovered from mnemonic, as shown in 
 [examples.py](examples.py) `get_fra_balance`.
