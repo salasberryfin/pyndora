@@ -95,10 +95,9 @@ def create_ligth_keypair(address: str) -> LightWalletKeypar:
     :param  address:str wallet bech32 address
     :return light_wallet:LightWalletKeypar
     """
-    # TODO
-    # implement Bech32 -> Public Key converter
-    # public_key = wallet.bech32_to_public_key(address)
+    public_key = wallet.bech32_to_public_key(address)
     light_wallet = LightWalletKeypar(
+        public_key=public_key,
         address=address,
     )
     return light_wallet
@@ -115,7 +114,7 @@ def get_mnemonic(length, lang="english"):
     return mnemonic
 
 
-def restore_from_mnemonic(mnemonic: list, password: str) -> WalletKeypar:
+def restore_from_mnemonic(mnemonic: str, password: str) -> WalletKeypar:
     """
     Restore keypair from mnemonic phrase.
 
@@ -148,7 +147,7 @@ def restore_from_mnemonic(mnemonic: list, password: str) -> WalletKeypar:
     return restored_wallet
 
 
-def restore_from_private_key(priv_str: str, passwor: str) -> WalletKeypar:
+def restore_from_private_key(priv_str: str, password: str) -> WalletKeypar:
     """
     Create instance of WalletKeypar using given private key and password
 

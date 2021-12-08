@@ -68,7 +68,7 @@ def get_wei_balance(wallet_keypair: WalletKeypar, asset_code: str) -> float:
     return wei_balance
 
 
-def get_balance(wallet_keypair: WalletKeypar, asset_code: str = None) -> float:
+def get_balance(wallet_keypair: WalletKeypar, asset_code: str = None) -> str:
     """
     Get the balance of the specific asset for the given user.
     Can be either a FRA or a custom asset.
