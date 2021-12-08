@@ -72,7 +72,7 @@ considerably tougher for the time I've been able to spent on it so far.
 <br>
 <br>
 Still, I think it would be great to continue building on top of this project if the team 
-finds it interesting. I got to learn a lot, which why I joined this hackathon in 
+finds it interesting. I got to learn a lot, which is why I joined this hackathon in 
 the first place and I'd love to be able to contribute to the project.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
