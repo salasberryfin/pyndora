@@ -120,10 +120,8 @@ pip install -r requirements.txt
 implemented. Feel free to test them out/modify/break.
 <br>
 - First you can initialize your SDK session, as shown in [examples.py](examples.py) `create_session`
-<br>
 This SDK object holds the configuration for the current session, assuming 
 sensible defaults for those parameters that are not passed.
-<br>
 ```python
 from pyndora.sdk import Sdk
 
@@ -135,15 +133,11 @@ env = {
 sdk = Sdk()
 sdk.init(env)
 ```
-<br>
 You can later `reset` this session to the default values if needed.
-<br>
 ```python
 sdk.reset()
 ```
-<br>
 - Generate a new mnemonic and create wallet from it, as shown in [examples.py](examples.py) `create_fra_keypair_from_mnemonic`.
-<br>
 ```python
 from pyndora.api import (
     keypair,
@@ -165,13 +159,11 @@ print(f"""Wallet:\n
       private_str: {wallet_info.private_str.decode("utf-8")}
       """)
 ```
-<br>
 *Encrypted store of 'key_store' and 'key_pair' not implemented.* -> Nice TODO 
 if someone is willing to collaborate on understanding how it's done in Findora.
 <br>
 - Get FRA balance for given wallet - recovered from mnemonic, as shown in 
 [examples.py](examples.py) `get_fra_balance`.
-<br>
 ```python
 from pyndora.api import (
     keypair,
@@ -197,12 +189,9 @@ balance = account.get_balance(wallet_info)
 
 print(f"The balance for address {wallet_info.address} is: {balance}")
 ```
-<br>
-*Balance can only be retrieved for FRA assets.* How to retrieve asset code?
-<br>
+*Balance can only be retrieved for FRA assets.* How do you retrieve asset code?
 - Sending a given amount to a wallet address is not fully implemented but a snippet 
 can be find in [examples.py](examples.py) `send_fra`.
-<br>
 ```python
 source_account_mnemonic = "insert your own mnemonic string"
 # use your desired fra address
@@ -223,7 +212,6 @@ print(f"""Restored Wallet:\n
 
     transaction.send_to_address(wallet_info, to_addr, "0.01")
 ```
-<br>
 *The transaction builder is not fully implemented and some assumptions had to 
 be made for unknowm wasm methods.*
 
