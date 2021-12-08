@@ -142,7 +142,6 @@ sdk.reset()
 ```python
 from pyndora.api import (
     keypair,
-    transaction,
 )
 
 mnemonic = keypair.get_mnemonic(length=24, lang="english")
